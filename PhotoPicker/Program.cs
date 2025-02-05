@@ -1,76 +1,79 @@
-﻿using Microsoft.Extensions.AI;
+﻿using System.Text.Json;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-//////// BUILD THE HOST
+////////   1.) BUILD THE DEPENDENCY INJECTION   //////// 
 var builder = Host.CreateApplicationBuilder();
-builder
-    .Services
-    .AddChatClient(new OllamaChatClient(
-        endpoint: new Uri("http://localhost:11434"),
-        modelId: "llava"))
-    .Build();
+var chatClient = builder.Services.AddChatClient(new OllamaChatClient(endpoint: new Uri("http://localhost:11434"), modelId: "llama3.2-vision")).Build();
 
-var app = builder.Build();
 
-//////// CREATE THE CHAT CLIENT
-var chatClient = app.Services.GetRequiredService<IChatClient>();
-
-//////// CREATE MESSAGE
-var messages = new List<ChatMessage>
+////////   2.) CREATE SYSTEM PROMPT   ////////
+var systemPrompt = new ChatMessage
 {
-    //new ChatMessage {
-    //    Role = ChatRole.System,
-    //    Text = "You are an agent that analyzes images for social platforms. "
-    //}
+    Role = ChatRole.System,
+    Text = @"
+               You are an AI model that must strictly respond in a well-formed JSON format.
+               You analyze images for the social platform Instagram for aesthetics on a scale from 1 to 10.
+               Consider composition, lighting, and engagement potential.
+               After analyzing an image, **always** return a valid, fully enclosed JSON object.
+               Return always the result as strictly in JSON format in the following structure:
+               {
+                 'rating': <number between 1 and 10>,
+                 'reason': '<brief explanation of why the rating was given>'
+               }
+
+               **Use the filename exactly as provided in the user prompt**—do not change or generate one.
+               Do not wrap with JSON ``` wrappers.
+               Return JSON as pretty formatted.
+               If the response is not a valid JSON object, **correct yourself and return a valid JSON format immediately.**
+               "
 };
 
 
-//messages.Add(new ChatMessage
-//{
-//    Role = ChatRole.User,
-//    Text = "Describe these photos: \n" +
-//           "https://raw.githubusercontent.com/ebicoglu/photo-picker/refs/heads/main/PhotoPicker/photos/photo-1.jpg, \n" +
-//           "https://raw.githubusercontent.com/ebicoglu/photo-picker/refs/heads/main/PhotoPicker/photos/photo-2.jpg, \n" +
-//           "https://raw.githubusercontent.com/ebicoglu/photo-picker/refs/heads/main/PhotoPicker/photos/photo-3.jpg, \n" +
-//           "https://raw.githubusercontent.com/ebicoglu/photo-picker/refs/heads/main/PhotoPicker/photos/photo-4.jpg"
-//});
-
- 
-
-//////// ADD IMAGES TO THE MESSAGE
-var contents = new List<AIContent>();
-const string directory = @"D:\github\alper\photo-picker\PhotoPicker\photos";
-var files = Directory.GetFiles(directory, "*.jpg");
-for (var i = 0; i < files.Length; i++)
+////////   3.) ASK TO AI   ////////
+var images = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\photos")).GetFiles("*.jpg");
+var aiResponses = new List<AiResponse>(images.Length);
+foreach (var image in images)
 {
-    var file = files[i];
-    messages.Add(new ChatMessage
+    var prompt = "Analyze this image: " + image.Name;
+
+    var messages = new List<ChatMessage>
     {
-        Role = ChatRole.User,
-        Text = "Describe this photo",
-        Contents = new List<AIContent> { new ImageContent(File.ReadAllBytes(file), "image/jpeg") }
-    });
+        systemPrompt,
+        new ChatMessage
+        {
+            Role = ChatRole.User,
+            Text = prompt,
+            Contents = new List<AIContent> { new ImageContent(File.ReadAllBytes(image.FullName)) }
+        }
+    };
+
+    Console.WriteLine("» PROMPT: " + prompt);
+    var chatResponse = await chatClient.CompleteAsync(messages);
+
+    Console.WriteLine("» AI-RESPONSE: \n" + chatResponse.Message.Text + "\n" + new string('═', 100));
+    var aiResponse = JsonSerializer.Deserialize<AiResponse>(chatResponse.Message.Text);
+    aiResponse.Filename = image.Name;
+    aiResponses.Add(aiResponse);
+    //messages.Add(chatResponse.Message);
 }
 
-//////// ASK TO AI
-Console.WriteLine(string.Join("\n", messages.Select(x => x.Text).Where(x => x != null)) + "\n\r");
-var chatResponse = await chatClient.CompleteAsync(messages);
-messages.Add(chatResponse.Message);
 
-Console.WriteLine(chatResponse.Message.Text);
+//////   4.) FIND THE WINNER   ////////
+var winner = aiResponses.OrderByDescending(x => x.Rating).FirstOrDefault();
+Console.WriteLine("» WINNER: " + winner?.Filename);
 
 
-Console.Write("You > ");
-var input = Console.ReadLine();
+////////   5.) DISPOSE   ////////
+Console.WriteLine("Completed.");
+chatClient.Dispose();
+Console.ReadLine();
 
-while (input != "exit")
+
+internal class AiResponse
 {
-    messages.Add(new ChatMessage { Role = ChatRole.User, Text = input });
-    chatResponse = await chatClient.CompleteAsync(messages);
-    messages.Add(chatResponse.Message);
-    Console.WriteLine("\nAI > " + chatResponse.Message.Text);
-    Console.Write("\nYou > ");
-    input = Console.ReadLine();
+    public string Filename { get; set; }
+    public short Rating { get; set; }
+    public string Reason { get; set; }
 }
-

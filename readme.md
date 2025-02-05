@@ -25,3 +25,9 @@ cd %LocalAppData%\Programs\Ollama
 ollama serve
 ```
 
+
+
+---
+
+Similar mobile app [Picker](https://apps.apple.com/us/app/picker-ai-best-photo-picker/id6448671716)
+
