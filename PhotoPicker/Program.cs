@@ -56,12 +56,11 @@ foreach (var image in images)
     var aiResponse = JsonSerializer.Deserialize<AiResponse>(chatResponse.Message.Text);
     aiResponse.Filename = image.Name;
     aiResponses.Add(aiResponse);
-    //messages.Add(chatResponse.Message);
 }
 
 
 //////   4.) FIND THE WINNER   ////////
-var winner = aiResponses.OrderByDescending(x => x.Rating).FirstOrDefault();
+var winner = aiResponses.MaxBy(x => x.Rating);
 Console.WriteLine("» WINNER: " + winner?.Filename);
 
 
