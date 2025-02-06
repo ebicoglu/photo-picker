@@ -1,6 +1,6 @@
 A sample project based on AI. 
 
-👉 [Download the Conference Presentation](https://github.com/ebicoglu/photo-picker/raw/refs/heads/main/Bursa.pptx) 
+👉 [Download the Conference Presentation](https://github.com/ebicoglu/photo-picker/raw/refs/heads/main/ai-as-a-simple-developer-2025-02-08.pptx) 
 
 
 
@@ -18,12 +18,17 @@ cd %LocalAppData%\Programs\Ollama
 ollama pull llama3.2-vision
 ```
 
-* `llama3.2-vision`: 7.9 GB  *(for image vision)*
-* `llava`: 4.7 GB *(for image vision)*
-* `deepseek-r1`: 4.7 GB
-* `llama3.2`: 2.0 GB
+* Popular models:
 
-3. Check if it's loaded at http://localhost:11434/api/tags or 
+  * `llama3.3`: 43GB
+  * `deepseek-r1`: 4.7 GB
+  * `llama3.2-vision`: 7.9 GB  *(for image vision)*
+  * `llava`: 4.7 GB *(for image vision)*
+  * 
+  * `llama3.2`: 2.0 GB
+
+  3. Check if it's loaded at http://localhost:11434/api/tags or 
+
 
 ```
 ollama list
