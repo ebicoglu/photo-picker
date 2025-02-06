@@ -8,11 +8,7 @@ var builder = Host.CreateApplicationBuilder();
 var chatClient = builder.Services.AddChatClient(new OllamaChatClient(endpoint: new Uri("http://localhost:11434"), modelId: "llama3.2-vision")).Build();
 
 
-////////   2.) CREATE SYSTEM PROMPT   ////////
-
-
-
-////////   3.) ASK TO AI   ////////
+////////   2.) ASK TO AI   ////////
 var images = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\photos")).GetFiles("*.jpg");
 var aiResponses = new List<AiResponse>(images.Length);
 foreach (var image in images)
@@ -71,7 +67,7 @@ foreach (var image in images)
 }
 
 
-//////   4.) FIND THE WINNER   ////////
+//////   3.) FIND THE WINNER   ////////
 var winner = aiResponses.MaxBy(x => x.Rating);
 Console.WriteLine("» WINNER: " + winner?.Filename);
 Console.ReadLine();
