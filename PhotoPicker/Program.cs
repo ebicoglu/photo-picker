@@ -2,10 +2,12 @@
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenAI;
 
 ////////   1.) BUILD THE DEPENDENCY INJECTION   //////// 
 var builder = Host.CreateApplicationBuilder();
-var chatClient = builder.Services.AddChatClient(new OllamaChatClient(endpoint: new Uri("http://localhost:11434"), modelId: "llama3.2-vision")).Build();
+var chatClient = builder.Services.AddChatClient(new OpenAIChatClient(new OpenAIClient(Environment.GetEnvironmentVariable("OPENAI_API_KEY")), "gpt-4o")).Build();
+//var chatClient = builder.Services.AddChatClient(new OllamaChatClient(endpoint: new Uri("http://localhost:11434"), modelId: "llama3.2-vision")).Build();
 
 
 ////////   2.) ASK TO AI   ////////
@@ -44,7 +46,7 @@ foreach (var image in images)
         {
             Role = ChatRole.User,
             Text =  @"Analyze this image:",
-            Contents = new List<AIContent> { new ImageContent(File.ReadAllBytes(image.FullName)) }
+            Contents = new List<AIContent> { new ImageContent(File.ReadAllBytes(image.FullName), "image/jpeg") }
         }
     };
 
@@ -52,6 +54,7 @@ foreach (var image in images)
 
     var chatResponse = await chatClient.CompleteAsync(messages);
     var jsonResult = chatResponse.Message.Text.Trim();
+    jsonResult = jsonResult.TrimStart("\"```json\"".ToCharArray()).TrimEnd("```".ToCharArray()).Trim();
 
     Console.WriteLine("» AI-RESPONSE: \n" + jsonResult + "\n" + new string('═', 100));
 
@@ -69,7 +72,7 @@ foreach (var image in images)
 
 //////   3.) FIND THE WINNER   ////////
 var winner = aiResponses.MaxBy(x => x.Rating);
-Console.WriteLine("» WINNER: " + winner?.Filename);
+Console.WriteLine("»»» WINNER: " + winner?.Filename + " «««");
 Console.ReadLine();
 
 
