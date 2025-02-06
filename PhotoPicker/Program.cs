@@ -9,26 +9,7 @@ var chatClient = builder.Services.AddChatClient(new OllamaChatClient(endpoint: n
 
 
 ////////   2.) CREATE SYSTEM PROMPT   ////////
-var systemPrompt = new ChatMessage
-{
-    Role = ChatRole.System,
-    Text = @"
-               You are an AI model that must strictly respond in a well-formed JSON format.
-               You analyze images for the social platform Instagram for aesthetics on a scale from 1 to 10.
-               Consider composition, lighting, and engagement potential.
-               After analyzing an image, **always** return a valid, fully enclosed JSON object.
-               Return always the result as strictly in JSON format in the following structure:
-               {
-                 'rating': <number between 1 and 10>,
-                 'reason': '<brief explanation of why the rating was given>'
-               }
 
-               **Use the filename exactly as provided in the user prompt**—do not change or generate one.
-               Do not wrap with JSON ``` wrappers.
-               Return JSON as pretty formatted.
-               If the response is not a valid JSON object, **correct yourself and return a valid JSON format immediately.**
-               "
-};
 
 
 ////////   3.) ASK TO AI   ////////
@@ -36,26 +17,56 @@ var images = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirector
 var aiResponses = new List<AiResponse>(images.Length);
 foreach (var image in images)
 {
-    var prompt = "Analyze this image: " + image.Name;
-
     var messages = new List<ChatMessage>
     {
-        systemPrompt,
+        new ChatMessage
+        {
+            Role = ChatRole.System,
+            Text = @"
+                    You are an AI model that must respond in **strict JSON format**.
+                    Analyze images for Instagram aesthetics on a scale from 1 to 100, considering composition, lighting, and engagement potential.
+                    Always return a **valid, fully enclosed JSON object** in the exact format:
+                    {         
+                      'rating': <number between 1 and 100>,
+                      'reason': '<Brief explanation of why the rating was given>'
+                    }
+
+                    ### **Rules:**
+                    1. **Return ONLY JSON** —do not add any extra text before or after.
+                    2. **Ensure the JSON is properly enclosed with `{}` brackets**.
+                    3. **If you generate an invalid JSON, fix yourself and return a valid JSON.**
+                    4. **If your response is wrapped in backticks, correct yourself and return a valid JSON immediately.**
+
+                    Example output:
+                    {         
+                        'rating': 85,
+                        'reason': 'The image has strong composition and lighting.'
+                    }
+               "
+        },
         new ChatMessage
         {
             Role = ChatRole.User,
-            Text = prompt,
+            Text =  @"Analyze this image:",
             Contents = new List<AIContent> { new ImageContent(File.ReadAllBytes(image.FullName)) }
         }
     };
 
-    Console.WriteLine("» PROMPT: " + prompt);
+    Console.WriteLine("» Analyzing: " + image.Name);
+
     var chatResponse = await chatClient.CompleteAsync(messages);
 
     Console.WriteLine("» AI-RESPONSE: \n" + chatResponse.Message.Text + "\n" + new string('═', 100));
-    var aiResponse = JsonSerializer.Deserialize<AiResponse>(chatResponse.Message.Text);
+    var aiResponse = JsonSerializer.Deserialize<AiResponse>(chatResponse.Message.Text, new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true,
+        ReadCommentHandling = JsonCommentHandling.Skip,
+        AllowTrailingCommas = true
+    });
+
     aiResponse.Filename = image.Name;
     aiResponses.Add(aiResponse);
+
 }
 
 
@@ -66,13 +77,12 @@ Console.WriteLine("» WINNER: " + winner?.Filename);
 
 ////////   5.) DISPOSE   ////////
 Console.WriteLine("Completed.");
-chatClient.Dispose();
 Console.ReadLine();
 
 
 internal class AiResponse
 {
     public string Filename { get; set; }
-    public short Rating { get; set; }
+    public byte Rating { get; set; }
     public string Reason { get; set; }
 }
