@@ -55,9 +55,11 @@ foreach (var image in images)
     Console.WriteLine("» Analyzing: " + image.Name);
 
     var chatResponse = await chatClient.CompleteAsync(messages);
+    var jsonResult = chatResponse.Message.Text.Trim();
 
-    Console.WriteLine("» AI-RESPONSE: \n" + chatResponse.Message.Text + "\n" + new string('═', 100));
-    var aiResponse = JsonSerializer.Deserialize<AiResponse>(chatResponse.Message.Text, new JsonSerializerOptions
+    Console.WriteLine("» AI-RESPONSE: \n" + jsonResult + "\n" + new string('═', 100));
+
+    var aiResponse = JsonSerializer.Deserialize<AiResponse>(jsonResult, new JsonSerializerOptions
     {
         PropertyNameCaseInsensitive = true,
         ReadCommentHandling = JsonCommentHandling.Skip,
@@ -66,17 +68,12 @@ foreach (var image in images)
 
     aiResponse.Filename = image.Name;
     aiResponses.Add(aiResponse);
-
 }
 
 
 //////   4.) FIND THE WINNER   ////////
 var winner = aiResponses.MaxBy(x => x.Rating);
 Console.WriteLine("» WINNER: " + winner?.Filename);
-
-
-////////   5.) DISPOSE   ////////
-Console.WriteLine("Completed.");
 Console.ReadLine();
 
 
