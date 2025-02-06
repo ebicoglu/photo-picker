@@ -1,3 +1,13 @@
+A sample project based on AI. 
+
+👉 [Download the Conference Presentation](https://github.com/ebicoglu/photo-picker/raw/refs/heads/main/Bursa.pptx) 
+
+
+
+---
+
+
+
 1. Download https://ollama.com/ and install.
 
 2. Download language model `llama3.2-vision`.  
