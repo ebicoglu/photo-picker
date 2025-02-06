@@ -4,9 +4,10 @@
 
 ```
 cd %LocalAppData%\Programs\Ollama
-ollama pull deepseek-r1
+ollama pull llama3.2-vision
 ```
 
+* `llama3.2-vision`: 7.9 GB
 * `deepseek-r1`: 4.7 GB
 * `llama3.2`: 2.0 GB
 * `llava`: 4.7 GB *(for image vision)*
