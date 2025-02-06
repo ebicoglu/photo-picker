@@ -1,6 +1,6 @@
 A sample project based on AI. 
 
-👉 [Download the Conference Presentation](https://github.com/ebicoglu/photo-picker/raw/refs/heads/main/ai-as-a-simple-developer-2025-02-08.pptx) 
+👉 [Download the Conference Presentation](https://github.com/ebicoglu/photo-picker/raw/refs/heads/main/presentation.pptx) 
 
 
 
