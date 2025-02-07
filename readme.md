@@ -1,4 +1,7 @@
-A sample project based on AI. 
+This repository is made for my talk at [BBT Connect: .NET](https://kommunity.com/bursa-bilisim-toplulugu/events/bbt-connect-net-c94ab11a) on 2025-02-08.
+
+---
+
 
 👉 [Download the Conference Presentation](https://github.com/ebicoglu/photo-picker/raw/refs/heads/main/presentation.pptx) 
 
