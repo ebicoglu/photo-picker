@@ -12,7 +12,7 @@ This repository is made for my talk at [BBT Connect: .NET](https://kommunity.com
 
 ---
 
-## Running Sample Project
+## Running the Sample Project
 
 1. Download https://ollama.com/ and install.
 
@@ -48,7 +48,7 @@ cd %LocalAppData%\Programs\Ollama
 ollama serve
 ```
 
-
+5. Run the PhotoPicker .NET Console app (.NET9 required)
 
 ---
 
