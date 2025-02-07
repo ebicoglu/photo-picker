@@ -2,6 +2,8 @@
 
 This repository is made for my talk at [BBT Connect: .NET](https://kommunity.com/bursa-bilisim-toplulugu/events/bbt-connect-net-c94ab11a) on 2025-02-08.
 
+![image](https://github.com/user-attachments/assets/9fa41c1c-2897-4607-84d4-ae6f193b1103)
+
 ---
 
 ## Presentation
