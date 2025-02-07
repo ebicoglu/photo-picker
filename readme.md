@@ -16,37 +16,30 @@ This repository is made for my talk at [BBT Connect: .NET](https://kommunity.com
 
 ## Running the Sample Project
 
-1. Download https://ollama.com/ and install.
-
-2. Download the language model `llama3.2-vision`.  
-   See all language models https://ollama.com/search
-
+1. Download application from https://ollama.com/ and install. It will install to `
 ```
-cd %LocalAppData%\Programs\Ollama
-ollama pull llama3.2-vision
+%LocalAppData%\Programs\Ollama
 ```
 
-* Popular models:
+2. Install  the language image vision model `llava:7b` . It's  4.7GB.
+```
+ollama pull llava:7b
+```
+
+* Other popular language models:
 
   * `llama3.3`: 43GB
   * `deepseek-r1`: 4.7 GB
   * `llama3.2-vision`: 7.9 GB  *(for image vision)*
-  * `llava`: 4.7 GB *(for image vision)*
-  * 
-  * `llama3.2`: 2.0 GB
-
-  3. Check if it's loaded at http://localhost:11434/api/tags or 
 
 
+3. Check if it's loaded at http://localhost:11434/api/tags or type the below command:
 ```
 ollama list
 ```
 
-
 4. Start Ollama server
-
 ```
-cd %LocalAppData%\Programs\Ollama
 ollama serve
 ```
 
