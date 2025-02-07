@@ -2,7 +2,7 @@
 
 This repository is made for my talk at [BBT Connect: .NET](https://kommunity.com/bursa-bilisim-toplulugu/events/bbt-connect-net-c94ab11a) on 2025-02-08.
 
-![image](https://github.com/user-attachments/assets/9fa41c1c-2897-4607-84d4-ae6f193b1103)
+![image](https://github.com/user-attachments/assets/4bc730cd-6b2e-4e32-be9f-c51eeb405716)
 
 ---
 
@@ -18,7 +18,7 @@ This repository is made for my talk at [BBT Connect: .NET](https://kommunity.com
 
 1. Download https://ollama.com/ and install.
 
-2. Download language model `llama3.2-vision`.  
+2. Download the language model `llama3.2-vision`.  
    See all language models https://ollama.com/search
 
 ```
@@ -56,5 +56,5 @@ ollama serve
 
 
 
-Similar mobile app [Picker](https://apps.apple.com/us/app/picker-ai-best-photo-picker/id6448671716)
+A similar mobile app [Picker](https://apps.apple.com/us/app/picker-ai-best-photo-picker/id6448671716)
 
