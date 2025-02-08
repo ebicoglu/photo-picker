@@ -12,20 +12,22 @@ This repository is made for my talk at [BBT Connect: .NET](https://kommunity.com
 
 ## Presentation
 
-👉 [Download the Conference Presentation](https://github.com/ebicoglu/photo-picker/raw/refs/heads/main/presentation.pptx) 
+👉 [Download the Presentation](https://github.com/ebicoglu/photo-picker/raw/refs/heads/main/presentation.pptx) 
 
 
 
 ---
 
-## Running the Sample Project
+## Running this Sample Project
 
-1. Download application from https://ollama.com/ and install. It will install to `
+1. Download application from https://ollama.com/ and install. 
+It will install to the following Windows directory
 ```
 %LocalAppData%\Programs\Ollama
 ```
 
-2. Install  the language image vision model `llava:7b` . It's  4.7GB.
+2. Install the following language model. 
+It's an image vision language model.
 ```
 ollama pull llava:7b
 ```
