@@ -8,6 +8,8 @@ This repository is made for my talk at [BBT Connect: .NET](https://kommunity.com
 
 ![image](https://github.com/user-attachments/assets/4bc730cd-6b2e-4e32-be9f-c51eeb405716)
 
+
+
 ---
 
 ## Presentation
