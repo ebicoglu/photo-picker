@@ -1,5 +1,9 @@
 ## Intro
 
+Every day, a new AI tool's coming up! 
+You're already tired of where to start. 
+I'll talk about AI and do live coding
+
 This repository is made for my talk at [BBT Connect: .NET](https://kommunity.com/bursa-bilisim-toplulugu/events/bbt-connect-net-c94ab11a) on 2025-02-08.
 
 ![image](https://github.com/user-attachments/assets/4bc730cd-6b2e-4e32-be9f-c51eeb405716)
