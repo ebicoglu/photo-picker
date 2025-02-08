@@ -100,7 +100,7 @@ bool TryParseJson<T>(string? text, out T? result)
             ReadCommentHandling = JsonCommentHandling.Skip,
             AllowTrailingCommas = true
         });
-
+        
         return true;
     }
     catch (Exception ex)
