@@ -8,6 +8,7 @@ This repository is made for my talk at [BBT Connect: .NET](https://kommunity.com
 
 ![image](https://github.com/user-attachments/assets/4bc730cd-6b2e-4e32-be9f-c51eeb405716)
 
+![Alper Ebicoglu - BBT Connect - AI Talk](https://github.com/user-attachments/assets/159413e4-bbb3-4ef0-80a5-0fdf2ee63598)
 
 
 ---
