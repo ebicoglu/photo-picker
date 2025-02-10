@@ -1,52 +1,61 @@
-A sample project based on AI. 
+## Intro
 
-👉 [Download the Conference Presentation](https://github.com/ebicoglu/photo-picker/raw/refs/heads/main/presentation.pptx) 
+Every day, a new AI tool's coming up! 
+You're already tired of where to start. 
+I'll talk about AI and do live coding
+
+This repository is made for my talk at [BBT Connect: .NET](https://kommunity.com/bursa-bilisim-toplulugu/events/bbt-connect-net-c94ab11a) on 2025-02-08.
+
+![image](https://github.com/user-attachments/assets/4bc730cd-6b2e-4e32-be9f-c51eeb405716)
 
 
 
 ---
 
+## Presentation
+
+👉 [Download the Presentation](https://github.com/ebicoglu/photo-picker/raw/refs/heads/main/presentation.pptx) 
 
 
-1. Download https://ollama.com/ and install.
 
-2. Download language model `llama3.2-vision`.  
-   See all language models https://ollama.com/search
+---
 
+## Running this Sample Project
+
+1. Download application from https://ollama.com/ and install. 
+It will install to the following Windows directory
 ```
-cd %LocalAppData%\Programs\Ollama
-ollama pull llama3.2-vision
+%LocalAppData%\Programs\Ollama
 ```
 
-* Popular models:
+2. Install the following language model. 
+It's an image vision language model.
+```
+ollama pull llava:7b
+```
+
+* Other popular language models:
 
   * `llama3.3`: 43GB
   * `deepseek-r1`: 4.7 GB
   * `llama3.2-vision`: 7.9 GB  *(for image vision)*
-  * `llava`: 4.7 GB *(for image vision)*
-  * 
-  * `llama3.2`: 2.0 GB
-
-  3. Check if it's loaded at http://localhost:11434/api/tags or 
 
 
+3. Check if it's loaded at http://localhost:11434/api/tags or type the below command:
 ```
 ollama list
 ```
 
-
 4. Start Ollama server
-
 ```
-cd %LocalAppData%\Programs\Ollama
 ollama serve
 ```
 
-
+5. Run the PhotoPicker .NET Console app (.NET9 required)
 
 ---
 
 
 
-Similar mobile app [Picker](https://apps.apple.com/us/app/picker-ai-best-photo-picker/id6448671716)
+A similar mobile app [Picker](https://apps.apple.com/us/app/picker-ai-best-photo-picker/id6448671716)
 

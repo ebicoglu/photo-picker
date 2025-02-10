@@ -2,11 +2,20 @@
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenAI;
 
 ////////   1.) BUILD THE DEPENDENCY INJECTION   //////// 
 var builder = Host.CreateApplicationBuilder();
-//var chatClient = builder.Services.AddChatClient(new OpenAIChatClient(new OpenAIClient(Environment.GetEnvironmentVariable("OPENAI_API_KEY")), "gpt-4o")).Build();
-var chatClient = builder.Services.AddChatClient(new OllamaChatClient(endpoint: new Uri("http://localhost:11434"), modelId: "llama3.2-vision")).Build();
+var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+var model = "gpt-4o";
+
+//var chatClient = builder.Services.AddChatClient(
+//    new OpenAIChatClient(new OpenAIClient(apiKey), model)
+//).Build();
+
+var chatClient = builder.Services.AddChatClient(
+    new OllamaChatClient("http://localhost:11434", "llava:7b")
+).Build();
 
 
 ////////   2.) CREATE THE PROMPTS    ////////
@@ -21,7 +30,11 @@ foreach (var image in images)
             Role = ChatRole.System,
             Text = @"
                     You are an AI model that must respond in **strict JSON format**.
-                    Analyze images for Instagram aesthetics on a scale from 1 to 100, considering composition, lighting, and engagement potential.
+                    Analyze images for Instagram aesthetics on a scale from 1 to 100, considering better lighting for higher ratings, 
+                    better sharpness for higher ratings, 
+                    blurry images are lower ratings, 
+                    good integrity of the object for higher ratings,
+                    and engagement potentials for higher ratings.
                     Always return a **valid, fully enclosed JSON object** in the exact format:
                     {         
                       ""rating"": <number between 1 and 100>,
@@ -44,7 +57,6 @@ foreach (var image in images)
         new ChatMessage
         {
             Role = ChatRole.User,
-            Text =  "Analyze this image",
             Contents = new List<AIContent> { new ImageContent(File.ReadAllBytes(image.FullName), "image/jpeg") }
         }
     };
@@ -54,6 +66,7 @@ foreach (var image in images)
     Console.WriteLine("» ASK TO AI: " + image.Name);
     var chatResponse = await chatClient.CompleteAsync(messages);
     Console.WriteLine("» AI-RESPONSE: \n" + chatResponse.Message.Text + "\n" + new string('═', 100));
+
 
 
     ////////   4.) DESERIALIZE THE AI RESPONSE   ////////
@@ -67,7 +80,7 @@ foreach (var image in images)
 
 //////   5.) FIND THE WINNER   ////////
 var winner = aiResponses.MaxBy(x => x.Rating);
-Console.WriteLine("»»» WINNER: " + winner?.Filename + " «««");
+Console.WriteLine("»»» WINNER »»» " + winner?.Filename + " (" + winner?.Rating + ")");
 Console.ReadLine();
 
 
@@ -81,15 +94,13 @@ bool TryParseJson<T>(string? text, out T? result)
             .TrimStart("\"```json\"".ToCharArray())
             .TrimEnd("```".ToCharArray()).Trim();
 
-        var r = JsonSerializer.Deserialize<dynamic>(text);
-
         result = JsonSerializer.Deserialize<T>(text, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
             ReadCommentHandling = JsonCommentHandling.Skip,
             AllowTrailingCommas = true
         });
-
+        
         return true;
     }
     catch (Exception ex)
